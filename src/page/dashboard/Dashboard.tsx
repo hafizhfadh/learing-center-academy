@@ -2,13 +2,15 @@ import { useDashboardData } from '../../features/dashboard/hooks/useDashboard';
 import { DashboardLayout } from '../../features/dashboard/components/DashboardLayout';
 import { StatisticsGrid } from '../../features/dashboard/components/StatisticsGrid';
 import { RecentActivitiesList } from '../../features/dashboard/components/RecentActivitiesList';
-import { ProfileCard } from '../../features/dashboard/components/ProfileCard';
+import { Overview } from '../../features/dashboard/components/Overview';
 import { DashboardSkeleton } from '../../features/dashboard/components/DashboardSkeleton';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { Button } from '@/components/ui/button';
-import { LogOut, RefreshCcw } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from '@tanstack/react-router';
 import { removeToken } from '../../features/auth/auth.utils';
+import { RefreshCcw } from 'lucide-react';
 
 function DashboardContent() {
     const { 
@@ -44,37 +46,35 @@ function DashboardContent() {
     }
 
     return (
-        <DashboardLayout 
-            headerAction={
-                <Button variant="ghost" onClick={handleLogout} className="gap-2 text-muted-foreground hover:text-destructive">
-                    <LogOut className="h-4 w-4" />
-                    Logout
-                </Button>
-            }
-        >
-            <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h2 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h2>
-                        <p className="text-muted-foreground">Welcome back, {profile.name.split(' ')[0]}!</p>
-                    </div>
-                    <Button onClick={refetchAll} variant="outline" size="sm" className="gap-2">
-                        <RefreshCcw className="h-4 w-4" />
-                        Refresh
-                    </Button>
-                </div>
-
-                <StatisticsGrid stats={stats} />
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2">
-                        <RecentActivitiesList activities={activities} />
-                    </div>
-                    <div>
-                        <ProfileCard profile={profile} />
-                    </div>
+        <DashboardLayout userProfile={profile} onLogout={handleLogout}>
+             <div className="flex items-center justify-between space-y-2">
+                <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+                <div className="flex items-center space-x-2">
+                    <Button>Download Report</Button>
                 </div>
             </div>
+            <Tabs defaultValue="overview" className="space-y-4">
+                <TabsList>
+                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                    <TabsTrigger value="analytics" disabled>Analytics</TabsTrigger>
+                    <TabsTrigger value="reports" disabled>Reports</TabsTrigger>
+                    <TabsTrigger value="notifications" disabled>Notifications</TabsTrigger>
+                </TabsList>
+                <TabsContent value="overview" className="space-y-4">
+                    <StatisticsGrid stats={stats} />
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                        <Card className="col-span-4">
+                            <CardHeader>
+                                <CardTitle>Overview</CardTitle>
+                            </CardHeader>
+                            <CardContent className="pl-2">
+                                <Overview />
+                            </CardContent>
+                        </Card>
+                        <RecentActivitiesList activities={activities} />
+                    </div>
+                </TabsContent>
+            </Tabs>
         </DashboardLayout>
     );
 }

@@ -1,60 +1,38 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import type { Activity } from '../types';
-import { CheckCircle2, FileText, GraduationCap, MessageSquare } from 'lucide-react';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 interface RecentActivitiesListProps {
     activities: Activity[];
 }
 
 export function RecentActivitiesList({ activities }: RecentActivitiesListProps) {
-    const getIcon = (type: Activity['type']) => {
-        switch (type) {
-            case 'lesson_complete': return <CheckCircle2 className="h-5 w-5 text-green-500" />;
-            case 'quiz_attempt': return <FileText className="h-5 w-5 text-amber-500" />;
-            case 'course_enroll': return <GraduationCap className="h-5 w-5 text-blue-500" />;
-            case 'comment': return <MessageSquare className="h-5 w-5 text-slate-500" />;
-        }
-    };
-
-    const formatTime = (dateString: string) => {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-        
-        if (diffInSeconds < 60) return 'Just now';
-        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-        return date.toLocaleDateString();
-    };
-
     return (
-        <Card className="h-full shadow-sm">
+        <Card className="col-span-3">
             <CardHeader>
-                <CardTitle className="text-lg font-medium">Recent Activity</CardTitle>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>
+                    You completed {activities.length} activities this month.
+                </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {activities.length === 0 ? (
-                        <p className="text-center text-muted-foreground py-4">No recent activity found.</p>
+                         <p className="text-sm text-muted-foreground">No recent activity.</p>
                     ) : (
                         activities.map((activity) => (
-                            <div key={activity.id} className="flex items-start gap-4 pb-4 border-b last:border-0 last:pb-0">
-                                <div className="mt-1 bg-muted/50 p-2 rounded-full">
-                                    {getIcon(activity.type)}
-                                </div>
-                                <div className="flex-1 space-y-1 min-w-0">
-                                    <p className="text-sm font-medium leading-none text-slate-900 truncate">
-                                        {activity.title}
+                            <div key={activity.id} className="flex items-center">
+                                <Avatar className="h-9 w-9">
+                                    <AvatarFallback>{activity.title.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div className="ml-4 space-y-1">
+                                    <p className="text-sm font-medium leading-none">{activity.title}</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        {new Date(activity.timestamp).toLocaleDateString()}
                                     </p>
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                        <span>{formatTime(activity.timestamp)}</span>
-                                        {activity.score && (
-                                            <Badge variant="outline" className="text-xs h-5 border-amber-200 text-amber-700 bg-amber-50">
-                                                Score: {activity.score}%
-                                            </Badge>
-                                        )}
-                                    </div>
+                                </div>
+                                <div className="ml-auto font-medium">
+                                    {activity.score ? `+${activity.score} pts` : ''}
                                 </div>
                             </div>
                         ))

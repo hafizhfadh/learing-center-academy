@@ -12,51 +12,41 @@ export function StatisticsGrid({ stats }: StatisticsGridProps) {
             title: 'Enrolled Courses',
             value: stats.totalCourses,
             icon: BookOpen,
-            color: 'text-blue-600',
-            bg: 'bg-blue-50',
-            desc: 'Active learning paths'
+            desc: '+2 from last month'
         },
         {
             title: 'Lessons Completed',
             value: stats.completedLessons,
             icon: CheckCircle,
-            color: 'text-green-600',
-            bg: 'bg-green-50',
-            desc: 'Total finished units'
+            desc: '+15% from last month'
         },
         {
             title: 'Hours Spent',
             value: stats.hoursSpent,
             icon: Clock,
-            color: 'text-amber-600',
-            bg: 'bg-amber-50',
-            desc: 'Time dedicated to study'
+            desc: '+4 hours this week'
         },
         {
             title: 'Average Score',
             value: `${stats.averageScore}%`,
             icon: Trophy,
-            color: 'text-purple-600',
-            bg: 'bg-purple-50',
-            desc: 'Performance metric'
+            desc: '+2.5% from last month'
         },
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {items.map((item, idx) => (
-                <Card key={idx} className="shadow-sm hover:shadow-md transition-all duration-200 border-l-4" style={{ borderLeftColor: item.color.includes('blue') ? '#1E40AF' : item.color.includes('green') ? '#10B981' : item.color.includes('amber') ? '#F59E0B' : '#7C3AED' }}>
+                <Card key={idx}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
+                        <CardTitle className="text-sm font-medium">
                             {item.title}
                         </CardTitle>
-                        <div className={`p-2 rounded-full ${item.bg}`}>
-                            <item.icon className={`h-4 w-4 ${item.color}`} />
-                        </div>
+                        <item.icon className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{item.value}</div>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <div className="text-2xl font-bold">{item.value}</div>
+                        <p className="text-xs text-muted-foreground">
                             {item.desc}
                         </p>
                     </CardContent>

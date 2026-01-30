@@ -1,20 +1,31 @@
 import type { ReactNode } from 'react';
+import { MainNav } from './MainNav';
+import { UserNav } from './UserNav';
+import { Search } from './Search';
+import type { UserProfile } from '../types';
 
 interface DashboardLayoutProps {
     children: ReactNode;
-    headerAction?: ReactNode;
+    userProfile?: UserProfile;
+    onLogout?: () => void;
 }
 
-export function DashboardLayout({ children, headerAction }: DashboardLayoutProps) {
+export function DashboardLayout({ children, userProfile, onLogout }: DashboardLayoutProps) {
     return (
-        <div className="min-h-screen bg-slate-50/50">
-            <header className="bg-white border-b sticky top-0 z-30">
-                <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-primary">Learning Center</h1>
-                    {headerAction}
+        <div className="flex-col md:flex min-h-screen bg-background">
+            <div className="border-b">
+                <div className="flex h-16 items-center px-4">
+                   <div className="font-bold text-xl mr-4 text-primary">Learning Center</div> 
+                    <MainNav className="mx-6" />
+                    <div className="ml-auto flex items-center space-x-4">
+                        <Search />
+                        {userProfile && onLogout && (
+                            <UserNav user={userProfile} onLogout={onLogout} />
+                        )}
+                    </div>
                 </div>
-            </header>
-            <main className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            </div>
+            <main className="flex-1 space-y-4 p-8 pt-6">
                 {children}
             </main>
         </div>
