@@ -1,0 +1,17 @@
+export interface LoginRequest {
+    email: string,
+    password: string,
+}
+export interface User {
+    id: number
+    name: string
+    email: string
+}
+
+export interface LoginResponse {
+    user: User
+    token: string
+    token_type: 'Bearer'
+    expires_in: number
+    app_token: string
+}
