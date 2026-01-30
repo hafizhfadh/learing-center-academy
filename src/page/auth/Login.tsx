@@ -1,5 +1,4 @@
 import { useForm } from '@tanstack/react-form'
-import { zodValidator } from '@tanstack/zod-form-adapter'
 import { z } from 'zod'
 import { useLogin } from '../../features/auth/auth.mutation'
 import { Button } from '../../components/ui/button'
@@ -11,7 +10,7 @@ import { Loader2 } from 'lucide-react'
 // Define schema
 const loginSchema = z.object({
     email: z.string().email('Please enter a valid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+    password: z.string().min(5, 'Password must be at least 6 characters'),
 })
 
 export default function Login() {
@@ -22,8 +21,6 @@ export default function Login() {
             email: '',
             password: '',
         },
-        // @ts-expect-error - validatorAdapter is not in types but required for Zod
-        validatorAdapter: zodValidator(),
         validators: {
             onChange: loginSchema,
         },
@@ -74,7 +71,9 @@ export default function Login() {
                                         className={field.state.meta.errors.length ? "border-destructive focus-visible:ring-destructive" : ""}
                                     />
                                     {field.state.meta.errors.length > 0 && (
-                                        <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                                        <p className="text-sm text-destructive">
+                                            {field.state.meta.errors.map((e: any) => e.message || e).join(', ')}
+                                        </p>
                                     )}
                                 </div>
                             )}
@@ -100,7 +99,9 @@ export default function Login() {
                                         className={field.state.meta.errors.length ? "border-destructive focus-visible:ring-destructive" : ""}
                                     />
                                     {field.state.meta.errors.length > 0 && (
-                                        <p className="text-sm text-destructive">{field.state.meta.errors.join(', ')}</p>
+                                        <p className="text-sm text-destructive">
+                                            {field.state.meta.errors.map((e: any) => e.message || e).join(', ')}
+                                        </p>
                                     )}
                                 </div>
                             )}
